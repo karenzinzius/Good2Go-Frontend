@@ -10,7 +10,7 @@ const Hero = () => {
           </h1>
 
           <p className="py-6 opacity-80">
-            Share usable items locally — fast, free, and without hassle.
+            Share usable items locally fast, free, and without hassle.
           </p>
 
           <div className="flex justify-center gap-4">
