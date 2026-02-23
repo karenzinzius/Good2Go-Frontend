@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   FaHome,
   FaPlus,
@@ -15,6 +15,8 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isLoggedIn }: MobileMenuProps) => {
+  const navigate = useNavigate()
+
   return (
     <ul className="menu p-4 w-64 min-h-full bg-base-100 text-base-content">
       {/* LOGO */}
@@ -77,14 +79,14 @@ const MobileMenu = ({ isLoggedIn }: MobileMenuProps) => {
             </Link>
           </li>
 
-          <div className="divider" />
+          <li className="p-0"><div className="divider m-0" /></li>
 
           <li>
             <button
               className="flex items-center gap-2 text-error"
               onClick={() => {
                 localStorage.removeItem('user')
-                window.location.href = '/login'
+                navigate('/login')
               }}
             >
               <FaSignOutAlt /> Logout
