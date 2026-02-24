@@ -84,6 +84,23 @@ const MyPostsPage = () => {
     setIsMessageModalOpen(false);
   };
 
+
+  // Favourite toggle
+  const handleToggleFav = (item: Item) => {
+    if (!currentUser) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const key = `fav-${item.id}`;
+    const current = JSON.parse(localStorage.getItem(key) || "false");
+    localStorage.setItem(key, JSON.stringify(!current));
+
+    // Trigger re-render
+    setItems([...items]);
+  };
+
+
   return (
     <MainLayout>
       <div className="p-4">
@@ -114,6 +131,16 @@ const MyPostsPage = () => {
                   Delete
                 </button>
               )}
+
+              {/* FAVOURITE BUTTON */}
+              <button
+                className={`absolute top-2 right-2 btn btn-sm btn-outline ${
+                  JSON.parse(localStorage.getItem(`fav-${item.id}`) || "false") ? "bg-red-500 text-white" : ""
+                }`}
+                onClick={() => handleToggleFav(item)}
+              >
+                ❤️
+              </button>
             </div>
           ))}
         </div>
