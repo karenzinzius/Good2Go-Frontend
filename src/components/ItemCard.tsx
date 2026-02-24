@@ -79,10 +79,10 @@ const ItemCard = ({
 
 
       {/* Image */}
-      {images && images.length > 0 && (
+      {Array.isArray(images) && images.length > 0 && (
         <div className="carousel w-full h-48">
-    {images.map((img, index) => (
-      <div key={index} className="carousel-item w-full">
+        {images.map((img, index) => (
+        <div key={index} className="carousel-item w-full">
         <img
           src={img}
           alt={`Image ${index}`}

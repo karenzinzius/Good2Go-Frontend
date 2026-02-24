@@ -19,15 +19,13 @@ const LoginPage = () => {
     e.preventDefault()
 
     // Read stored user object
-    const storedUser = localStorage.getItem('user')
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
     if (!storedUser) {
-      alert('No account found. Please sign up first.')
-      return
+      alert('No account found. Please sign up first.');
+      return;                  
     }
 
-    const userObj = JSON.parse(storedUser)
-
-    if (userObj.email !== form.email) {
+    if (storedUser.email !== form.email) {
       alert('Email does not match our records.')
       return
     }

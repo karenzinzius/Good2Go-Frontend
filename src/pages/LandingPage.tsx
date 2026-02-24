@@ -1,7 +1,7 @@
 import SearchBar from '../components/SearchBar'
 import ItemGrid from '../components/ItemGrid'
 import { getUser } from '../utils/getUser'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import MainLayout from "../layouts/MainLayout"
 
 const LandingPage = () => {
