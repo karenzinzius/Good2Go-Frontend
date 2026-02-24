@@ -4,7 +4,6 @@ import {
   FaPlus,
   FaHeart,
   FaComments,
-  FaClipboardList,
   FaUser,
   FaSignOutAlt,
   FaSignInAlt,
@@ -50,8 +49,8 @@ const MobileMenu = ({ isLoggedIn }: MobileMenuProps) => {
           </li>
 
           <li>
-            <Link to="/giveaway" className="flex items-center gap-2">
-              <FaPlus /> Post item
+            <Link to="/my-posts" className="flex items-center gap-2">
+              <FaPlus /> Posts
             </Link>
           </li>
 
@@ -66,13 +65,7 @@ const MobileMenu = ({ isLoggedIn }: MobileMenuProps) => {
               <FaComments /> Chats
             </Link>
           </li>
-
-          <li>
-            <Link to="/my-posts" className="flex items-center gap-2">
-              <FaClipboardList /> My Posts
-            </Link>
-          </li>
-
+          
           <li>
             <Link to="/profile" className="flex items-center gap-2">
               <FaUser /> Profile

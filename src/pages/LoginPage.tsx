@@ -34,7 +34,7 @@ const LoginPage = () => {
     // Later, backend validation will go here
 
     // Redirect to dashboard
-    navigate('/dashboard')
+    navigate('/')
   }
 
   return (

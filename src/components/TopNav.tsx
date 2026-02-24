@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaHeart, FaComments, FaPlus, FaUser, FaBars } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { getUser } from "../utils/getUser";
@@ -7,7 +7,6 @@ import NavItem from "./NavItem";
 const TopNav = () => {
   const user = getUser();
   const isLoggedIn = !!user;
-  const location = useLocation();
 
   return (
     <div className="drawer drawer-end md:drawer-closed">
@@ -43,8 +42,8 @@ const TopNav = () => {
             {isLoggedIn && (
               <>
                 <NavItem to="/">Home</NavItem>
-                <NavItem to="/giveaway">
-                  <FaPlus /> Post
+                <NavItem to="/my-posts">
+                  <FaPlus /> Posts
                 </NavItem>
                 <NavItem to="/favourites">
                   <FaHeart /> Favourites
@@ -62,9 +61,6 @@ const TopNav = () => {
                   <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
                     <li>
                       <Link to="/profile">Profile</Link>
-                    </li>
-                    <li>
-                      <Link to="/my-posts">My posts</Link>
                     </li>
                     <div className="divider my-1" />
                     <li>

@@ -49,7 +49,7 @@ const SignupPage = () => {
     localStorage.setItem('user', JSON.stringify(userObj))
 
     // Redirect to dashboard
-    navigate('/dashboard')
+    navigate('/')
   }
 
   return (
