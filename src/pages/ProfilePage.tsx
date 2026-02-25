@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 const ProfilePage = () => {
   // Load stored user or default empty
@@ -9,19 +9,29 @@ const ProfilePage = () => {
   const [postalCode, setPostalCode] = useState(storedUser.postalCode || '')
   const [numPosts, setNumPosts] = useState(storedUser.numPosts || 0)
   const [profilePic, setProfilePic] = useState(storedUser.profilePic || '')
+  const [toast, setToast] = useState("");
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
   // Handle image upload
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = () => {
-        setProfilePic(reader.result as string)
+        setProfilePic(reader.result as string);
+        showToast("Profile picture updated ✅");
       }
       reader.readAsDataURL(file)
     }
-  }
+  };
 
+  // 🗑 Handling Delete image
+  const handleDeleteImage = () => {
+    setProfilePic("");
+    showToast("Profile picture removed 🗑");
+  };
+
+  // 💾 Save profile
   const handleSave = () => {
     const updatedUser = {
       ...storedUser,
@@ -32,30 +42,74 @@ const ProfilePage = () => {
       profilePic,
     }
     localStorage.setItem('user', JSON.stringify(updatedUser))
-    alert('Profile updated')
-  }
+    showToast("Profile saved successfully 🎉")
+  };
+
+  // 🔔 Toast helper
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(""), 3000);
+  };
 
   // Default avatar letter
-  const avatarLetter = !profilePic && username ? username[0].toUpperCase() : ''
+  const avatarLetter = !profilePic && username ? username[0].toUpperCase() : '?';
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-base-100 p-6 rounded-box shadow">
-      <h2 className="text-xl font-bold mb-4">Profile</h2>
+    <div className="max-w-md mx-auto mt-10 bg-base-100 p-6 rounded-box shadow relative">
+
+      {/* 🔔 TOAST */}
+      {toast && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-green-600 text-white px-4 py-2 rounded shadow">
+          {toast}
+        </div>
+      )}
+
+      <h2 className="text-xl font-bold mb-6 text-center">Profile</h2>
 
       {/* Profile Picture */}
-      <div className="flex flex-col items-center mb-4">
-        {profilePic ? (
-          <img
-            src={profilePic}
-            alt="Profile"
-            className="w-24 h-24 rounded-full object-cover mb-2"
+      <div className="flex justify-center mb-6">
+        <div className="relative group w-28 h-28">
+
+          {/* Image / Avatar */}
+          {profilePic ? (
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="w-full h-full rounded-full object-cover border-2 border-base-300"
+            />
+          ) : (
+            <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center text-3xl font-bold">
+              {avatarLetter}
+            </div>
+          )}
+
+          {/* 📷 Camera */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute bottom-1 left-1 bg-black/70 hover:bg-black text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+          >
+            📷
+          </button>
+
+          {/* 🗑 Delete */}
+          {profilePic && (
+            <button
+              onClick={handleDeleteImage}
+              className="absolute bottom-1 right-1 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+            >
+              🗑
+            </button>
+          )}
+
+          {/* Hidden input */}
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleProfilePicChange}
           />
-        ) : (
-          <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center text-2xl font-bold mb-2">
-            {avatarLetter || '?'}
-          </div>
-        )}
-        <input type="file" accept="image/*" onChange={handleProfilePicChange} />
+        </div>
       </div>
 
       {/* Username */}

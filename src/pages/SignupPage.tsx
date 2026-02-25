@@ -1,61 +1,72 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { FaGoogle, FaApple } from 'react-icons/fa'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { FaGoogle, FaApple } from "react-icons/fa";
 
 interface SignupForm {
-  username: string
-  email: string
-  confirmEmail: string
-  password: string
-  confirmPassword: string
+  username: string;
+  email: string;
+  confirmEmail: string;
+  password: string;
+  confirmPassword: string;
 }
 
 const SignupPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [toast, setToast] = useState("");
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 2500);
+  };
   const [form, setForm] = useState<SignupForm>({
-    username: '',
-    email: '',
-    confirmEmail: '',
-    password: '',
-    confirmPassword: '',
-  })
+    username: "",
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Validate passwords
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match!')
-      return
+      showToast("Passwords don’t match!");
+      return;
     }
 
     // Validate emails
     if (form.email !== form.confirmEmail) {
-      alert('Emails do not match!')
-      return
+      showToast("Emails don’t match!");
+      return;
     }
 
     // Create user object / Store Username + Email in Localstorage
     const userObj = {
       username: form.username.trim(),
       email: form.email.trim(),
-    }
+    };
 
     // Save to localStorage
-    localStorage.setItem('user', JSON.stringify(userObj))
+    localStorage.setItem("user", JSON.stringify(userObj));
 
     // Redirect to dashboard
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-100">
+      {toast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success shadow-lg">
+            <span>{toast}</span>
+          </div>
+        </div>
+      )}
       <div className="card shadow-md w-full max-w-md p-8 relative">
-
         {/* Back button */}
         <Link
           to="/"
@@ -69,7 +80,6 @@ const SignupPage = () => {
 
         {/* Signup form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
           {/* Username */}
           <div className="form-control">
             <label className="label">
@@ -163,20 +173,20 @@ const SignupPage = () => {
         <div className="flex flex-col gap-3">
           <button
             className="btn btn-outline btn-primary flex items-center justify-center gap-2"
-            onClick={() => alert('Google login coming soon!')}
+            onClick={() => alert("Google login coming soon!")}
           >
             <FaGoogle /> Continue with Google
           </button>
           <button
             className="btn btn-outline btn-primary flex items-center justify-center gap-2"
-            onClick={() => alert('Apple login coming soon!')}
+            onClick={() => alert("Apple login coming soon!")}
           >
             <FaApple /> Continue with Apple
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignupPage
+export default SignupPage;

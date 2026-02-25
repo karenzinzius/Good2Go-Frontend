@@ -1,45 +1,56 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { FaGoogle, FaApple } from 'react-icons/fa'
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { FaGoogle, FaApple } from "react-icons/fa";
 
 interface LoginForm {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 const LoginPage = () => {
-  const navigate = useNavigate()
-  const [form, setForm] = useState<LoginForm>({ email: '', password: '' })
+  const navigate = useNavigate();
+  const [toast, setToast] = useState("");
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 2500);
+  };
+  const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Read stored user object
-    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
     if (!storedUser) {
-      alert('No account found. Please sign up first.');
-      return;                  
+      showToast("No account found. Please sign up.");
+      return;
     }
 
     if (storedUser.email !== form.email) {
-      alert('Email does not match our records.')
-      return
+      showToast("Wrong email/Email does not match");
+      return;
     }
 
     // For now, we skip password validation (mock login)
     // Later, backend validation will go here
 
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-100">
+      {toast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success shadow-lg">
+            <span>{toast}</span>
+          </div>
+        </div>
+      )}
       <div className="card shadow-md w-full max-w-md p-8 relative">
-
         {/* Back button */}
         <Link
           to="/"
@@ -95,20 +106,20 @@ const LoginPage = () => {
         <div className="flex flex-col gap-3">
           <button
             className="btn btn-outline btn-primary flex items-center justify-center gap-2"
-            onClick={() => alert('Google login coming soon!')}
+            onClick={() => showToast("Google login coming soon!")}
           >
             <FaGoogle /> Continue with Google
           </button>
           <button
             className="btn btn-outline btn-primary flex items-center justify-center gap-2"
-            onClick={() => alert('Apple login coming soon!')}
+            onClick={() => alert("Apple login coming soon!")}
           >
             <FaApple /> Continue with Apple
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

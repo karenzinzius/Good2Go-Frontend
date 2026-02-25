@@ -5,6 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import type { ReactNode } from "react";
+import { Toaster } from "react-hot-toast";
 
 import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/LoginPage";
@@ -29,6 +30,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 const App = () => {
   return (
     <Router>
+      <Toaster position="top-right" />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Homepage />} />
