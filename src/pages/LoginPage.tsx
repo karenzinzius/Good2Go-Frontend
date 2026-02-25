@@ -33,7 +33,6 @@ const LoginPage = () => {
     // For now, we skip password validation (mock login)
     // Later, backend validation will go here
 
-    // Redirect to dashboard
     navigate('/')
   }
 

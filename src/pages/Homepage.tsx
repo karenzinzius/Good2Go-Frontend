@@ -1,7 +1,6 @@
 import MainLayout from "../layouts/MainLayout";
 import SearchBar from "../components/SearchBar";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 interface Item {
   id: number;
@@ -119,18 +118,6 @@ const Homepage = () => {
             </div>
           ))}
         </div>
-
-        {/* CTA for logged-out users */}
-        {!isLoggedIn && (
-          <div className="text-center mt-10">
-            <p className="mb-3 opacity-70">
-              Want to give something away or chat with others?
-            </p>
-            <Link to="/signup" className="btn btn-primary">
-              Create an account
-            </Link>
-          </div>
-        )}
 
         {/* MESSAGE MODAL */}
         {isMessageModalOpen && (

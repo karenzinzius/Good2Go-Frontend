@@ -61,7 +61,7 @@ const MessagesPage = () => {
         m.fromUser === currentUser?.username || m.toUser === currentUser?.username
     );
     setMessages(relevant);
-  }, [currentUser]);
+  }, []);
 
   // Group messages by item
   const groupByItem = (msgs: Message[]) => {

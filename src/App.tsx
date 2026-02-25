@@ -1,66 +1,64 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import type { ReactNode } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import type { ReactNode } from "react";
 
-import LandingPage from './pages/LandingPage'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
-import DashboardPage from './pages/DashboardPage'
-import GiveawayPage from './pages/GiveawayPage'
-import FavouritesPage from './pages/FavouritesPage'
-import MessagesPage from './pages/MessagesPage'
-import ProfilePage from './pages/ProfilePage'
-import MyPostsPage from './pages/MyPostsPage'
+import Homepage from "./pages/Homepage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import FavouritesPage from "./pages/FavouritesPage";
+import MessagesPage from "./pages/MessagesPage";
+import ProfilePage from "./pages/ProfilePage";
+import MyPostsPage from "./pages/MyPostsPage";
 
 // Auth check
-const isAuthenticated = () => !!localStorage.getItem('user')
+const isAuthenticated = () => !!localStorage.getItem("user");
 
 // Protected route wrapper
 interface ProtectedRouteProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />
-}
+  return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />;
+};
 
 const App = () => {
   return (
     <Router>
       <Routes>
-
         {/* Public routes */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
-        {/* You can protect these later if needed */}
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/my-posts" element={<MyPostsPage />} />
-
         {/* Protected routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/giveaway"
-          element={
-            <ProtectedRoute>
-              <GiveawayPage />
-            </ProtectedRoute>
-          }
-        />
-
         <Route
           path="/favourites"
           element={
             <ProtectedRoute>
               <FavouritesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-posts"
+          element={
+            <ProtectedRoute>
+              <MyPostsPage />
             </ProtectedRoute>
           }
         />
@@ -73,10 +71,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-
       </Routes>
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;
