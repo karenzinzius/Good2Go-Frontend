@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import MainLayout from "../layouts/MainLayout";
 
 const ProfilePage = () => {
   // Load stored user or default empty
@@ -55,6 +56,7 @@ const ProfilePage = () => {
   const avatarLetter = !profilePic && username ? username[0].toUpperCase() : '?';
 
   return (
+    <MainLayout>
     <div className="max-w-md mx-auto mt-10 bg-base-100 p-6 rounded-box shadow relative">
 
       {/* 🔔 TOAST */}
@@ -157,6 +159,7 @@ const ProfilePage = () => {
         Save
       </button>
     </div>
+    </MainLayout>
   )
 }
 

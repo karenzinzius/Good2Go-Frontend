@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaGoogle, FaApple } from "react-icons/fa";
+import MainLayout from "../layouts/MainLayout";
 
 interface LoginForm {
   email: string;
@@ -9,11 +10,15 @@ interface LoginForm {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [toast, setToast] = useState("");
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 2500);
-  };
+  const [toast, setToast] = useState<{
+  msg: string
+  type: "success" | "error"
+} | null>(null);
+
+ const showToast = (msg: string, type: "success" | "error" = "success") => {
+  setToast({ msg, type });
+  setTimeout(() => setToast(null), 2500);
+};
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,12 +31,12 @@ const LoginPage = () => {
     // Read stored user object
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
     if (!storedUser) {
-      showToast("No account found. Please sign up.");
+      showToast("No account found. Please sign up.", "error");
       return;
     }
 
     if (storedUser.email !== form.email) {
-      showToast("Wrong email/Email does not match");
+      showToast("Wrong email/Email does not match", "error");
       return;
     }
 
@@ -42,14 +47,19 @@ const LoginPage = () => {
   };
 
   return (
+    <MainLayout>
     <div className="min-h-screen flex items-center justify-center bg-base-100">
       {toast && (
-        <div className="toast toast-top toast-center">
-          <div className="alert alert-success shadow-lg">
-            <span>{toast}</span>
-          </div>
-        </div>
-      )}
+  <div className="toast toast-top toast-center">
+    <div
+      className={`alert shadow-lg ${
+        toast.type === "success" ? "alert-success" : "alert-error"
+      }`}
+    >
+      <span>{toast.msg}</span>
+    </div>
+  </div>
+)}
       <div className="card shadow-md w-full max-w-md p-8 relative">
         {/* Back button */}
         <Link
@@ -119,6 +129,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
+    </MainLayout>
   );
 };
 

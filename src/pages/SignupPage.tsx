@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaGoogle, FaApple } from "react-icons/fa";
+import MainLayout from "../layouts/MainLayout";
 
 interface SignupForm {
   username: string;
@@ -58,6 +59,7 @@ const SignupPage = () => {
   };
 
   return (
+    <MainLayout>
     <div className="min-h-screen flex items-center justify-center bg-base-100">
       {toast && (
         <div className="toast toast-top toast-center">
@@ -186,6 +188,7 @@ const SignupPage = () => {
         </div>
       </div>
     </div>
+    </MainLayout>
   );
 };
 

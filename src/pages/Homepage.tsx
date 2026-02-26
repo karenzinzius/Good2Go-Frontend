@@ -73,7 +73,9 @@ const Homepage = () => {
         {/* Hero / Welcome */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold">
-            {isLoggedIn ? `Welcome, ${user.username} 👋` : "Give things a second life"}
+            {isLoggedIn
+              ? `Welcome, ${user.username} 👋`
+              : "Give things a second life"}
           </h1>
           <p className="opacity-70">
             {isLoggedIn
@@ -91,7 +93,20 @@ const Homepage = () => {
             <p className="opacity-70 col-span-full">No items posted yet.</p>
           )}
           {items.map((item) => (
-            <div key={item.id} className="card bg-base-100 shadow p-3">
+            <div key={item.id} className="card bg-base-100 shadow p-3 relative">
+              {/* IMAGE */}
+              {item.images && item.images.length > 0 ? (
+                <img
+                  src={item.images[0]}
+                  alt={item.title}
+                  className="w-full h-40 object-cover rounded-md mb-2"
+                />
+              ) : (
+                <div className="w-full h-40 bg-gray-200 flex items-center justify-center rounded-md mb-2">
+                  No Image
+                </div>
+              )}
+
               <h3 className="font-bold">{item.title}</h3>
               <p>{item.description}</p>
               <p className="text-sm opacity-60">{item.location}</p>
