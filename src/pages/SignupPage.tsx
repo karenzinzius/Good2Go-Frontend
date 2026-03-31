@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaGoogle, FaApple } from "react-icons/fa";
 import MainLayout from "../layouts/MainLayout";
+import axios from "axios";
 
 interface SignupForm {
   username: string;
@@ -13,10 +14,10 @@ interface SignupForm {
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const [toast, setToast] = useState("");
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 2500);
+  const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ msg, type});
+    setTimeout(() => setToast(null), 2500);
   };
   const [form, setForm] = useState<SignupForm>({
     username: "",
@@ -30,33 +31,46 @@ const SignupPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // Validate passwords
-    if (form.password !== form.confirmPassword) {
-      showToast("Passwords don’t match!");
-      return;
-    }
+  // 1. Frontend Validation (Stop here if details are wrong)
+  if (form.password !== form.confirmPassword) {
+    showToast("Passwords don’t match!", "error");
+    return;
+  }
 
-    // Validate emails
-    if (form.email !== form.confirmEmail) {
-      showToast("Emails don’t match!");
-      return;
-    }
+  if (form.email !== form.confirmEmail) {
+    showToast("Emails don’t match!", "error");
+    return;
+  }
 
-    // Create user object / Store Username + Email in Localstorage
-    const userObj = {
-      username: form.username.trim(),
-      email: form.email.trim(),
-    };
+  try {
+    // 2. Register the user
+    await axios.post("http://localhost:4000/api/auth/register", {
+      username: form.username,
+      email: form.email,
+      password: form.password
+    });
 
-    // Save to localStorage
-    localStorage.setItem("user", JSON.stringify(userObj));
+    // 3. Login automatically to get the cookies
+    await axios.post("http://localhost:4000/api/auth/login", {
+      email: form.email,
+      password: form.password
+    }, { withCredentials: true });
 
-    // Redirect to dashboard
-    navigate("/");
-  };
+    // 4. Fetch the full User object (including MongoDB _id)
+    const userRes = await axios.get("http://localhost:4000/api/auth/me", { withCredentials: true });
+    
+    // 5. Store user info and redirect
+    localStorage.setItem("user", JSON.stringify(userRes.data.user));
+    showToast("Account created! Welcome. ✨", "success");
+    
+    setTimeout(() => navigate("/"), 1500);
+  } catch (err: any) {
+    showToast(err.response?.data?.message || "Registration failed!", "error");
+  }
+};
 
   return (
     <MainLayout>
@@ -64,7 +78,7 @@ const SignupPage = () => {
       {toast && (
         <div className="toast toast-top toast-center">
           <div className="alert alert-success shadow-lg">
-            <span>{toast}</span>
+            <span>{toast.msg}</span>
           </div>
         </div>
       )}
@@ -117,7 +131,7 @@ const SignupPage = () => {
           {/* Repeat Email */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Repeat Email</span>
+              <span className="label-text">Confirm Email</span>
             </label>
             <input
               type="email"

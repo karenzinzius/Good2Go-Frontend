@@ -1,89 +1,93 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import MainLayout from '../layouts/MainLayout';
+import Swal from 'sweetalert2';
 
-interface Item {
-  id: number;
+export interface PostItem {
+  _id: string; // MongoDB IDs are strings
   title: string;
   description: string;
   location: string;
-  category?: string;
-  images?: string[];
-  ownerUsername: string;
+  category: string;
+  images: string[];
+  ownerId: string;
+  createdAt: string;
 }
 
 const FavouritesPage = () => {
-  const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
-  const [posts, setPosts] = useState<Item[]>([]);
-  const [favourites, setFavourites] = useState<Item[]>([]);
+  const [favourites, setFavourites] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load all posts from localStorage
+  // 1. Fetch real favourites from DB
   useEffect(() => {
-    const savedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
-    setPosts(savedPosts);
+    const fetchFavs = async () => {
+      try {
+        // We call /me or a specific /favourites endpoint
+        const res = await axios.get('http://localhost:4000/api/auth/me', { withCredentials: true });
+        // Assuming your backend populates the favourites array
+        setFavourites(res.data.user.favourites || []);
+      } catch (err) {
+        console.error("Failed to fetch favourites");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFavs();
   }, []);
 
-  // Load favourite posts
-  useEffect(() => {
-    const favItems = posts.filter(item => {
-      const fav = localStorage.getItem(`fav-${item.id}`);
-      return fav && JSON.parse(fav);
-    });
-    setFavourites(favItems);
-  }, [posts]);
-
-  const handleToggleFav = (item: Item) => {
-    if (!currentUser) {
-      window.location.href = '/login';
-      return;
+  const handleRemoveFav = async (postId: string) => {
+    try {
+      await axios.post('http://localhost:4000/api/posts/favourite', 
+        { postId }, 
+        { withCredentials: true }
+      );
+      // Update UI: Remove the item from the state
+      setFavourites(prev => prev.filter(item => item._id !== postId));
+      
+      Swal.fire({
+        title: 'Removed!',
+        icon: 'success',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    } catch (err) {
+      Swal.fire('Error', 'Could not remove favourite', 'error');
     }
-
-    const key = `fav-${item.id}`;
-    const current = JSON.parse(localStorage.getItem(key) || 'false');
-    localStorage.setItem(key, JSON.stringify(!current));
-
-    // Update favourites immediately
-    const favItems = posts.filter(p => JSON.parse(localStorage.getItem(`fav-${p.id}`) || 'false'));
-    setFavourites(favItems);
-  };
-
-  const handleDelete = (id: number) => {
-    const updatedPosts = posts.filter(item => item.id !== id);
-    setPosts(updatedPosts);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
   };
 
   return (
     <MainLayout>
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Favourites ❤️</h1>
+        <h1 className="text-2xl font-bold mb-4">My Saved Items ❤️</h1>
 
-        {favourites.length === 0 ? (
-          <p className="opacity-70">You have no favourites yet.</p>
+        {loading ? (
+          <span className="loading loading-dots loading-lg"></span>
+        ) : favourites.length === 0 ? (
+          <div className="text-center py-10">
+             <p className="opacity-70">Nothing saved yet. Go find some treasures! 🚲</p>
+          </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {favourites.map(item => (
-              <div key={item.id} className="card bg-base-100 shadow p-3 relative">
-                <h3 className="font-bold">{item.title}</h3>
-                <p>{item.description}</p>
-                <p className="text-sm opacity-60">{item.location}</p>
-
-                {/* Favourite toggle */}
-                <button
-                  className="absolute top-2 right-2 btn btn-sm btn-outline"
-                  onClick={() => handleToggleFav(item)}
-                >
-                  ❤️
-                </button>
-
-                {/* Delete button (only owner) */}
-                {item.ownerUsername === currentUser?.username && (
-                  <button
-                    className="btn btn-sm mt-2 bg-red-500 text-white"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Delete
-                  </button>
+              <div key={item._id} className="card bg-base-100 shadow-xl overflow-hidden relative">
+                {item.images?.[0] && (
+                  <figure><img src={item.images[0]} alt={item.title} className="h-48 w-full object-cover" /></figure>
                 )}
+                <div className="card-body p-4">
+                  <h3 className="card-title text-primary">{item.title}</h3>
+                  <p className="text-sm line-clamp-2">{item.description}</p>
+                  <div className="card-actions justify-between items-center mt-2">
+                    <span className="badge badge-outline">{item.location}</span>
+                    <button 
+                      className="btn btn-circle btn-ghost text-red-500"
+                      onClick={() => handleRemoveFav(item._id)}
+                    >
+                      ❤️
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

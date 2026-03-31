@@ -3,10 +3,23 @@ import { FaHeart, FaComments, FaPlus, FaUser, FaBars } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { getUser } from "../utils/getUser";
 import NavItem from "./NavItem";
+import axios from "axios";
 
 const TopNav = () => {
   const user = getUser();
   const isLoggedIn = !!user;
+  const handleLogout = async () => {
+  try {
+    // 1. Tell backend to clear cookies
+    await axios.delete("http://localhost:4000/api/auth/logout", { withCredentials: true });
+    // 2. Clear local storage
+    localStorage.removeItem("user");
+    // 3. Refresh or Redirect
+    window.location.href = "/";
+  } catch (err) {
+    console.error("Logout failed");
+  }
+};
 
   return (
     <div className="drawer drawer-end md:drawer-closed">
@@ -65,10 +78,7 @@ const TopNav = () => {
                     <div className="divider my-1" />
                     <li>
                       <button
-                        onClick={() => {
-                          localStorage.removeItem("user");
-                          window.location.href = "/";
-                        }}
+                        onClick={handleLogout}
                       >
                         Logout
                       </button>

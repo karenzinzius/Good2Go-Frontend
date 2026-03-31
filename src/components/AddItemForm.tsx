@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import Swal from 'sweetalert2';
 
 interface AddItemFormProps {
   onAdd: (newItem: any) => void;
@@ -11,13 +13,38 @@ const AddItemForm = ({ onAdd }: AddItemFormProps) => {
   const [category, setCategory] = useState("Furniture");
   const [images, setImages] = useState<string[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !description || !location) return;
 
-    onAdd({ id: Date.now(), title, description, location, category, images });
-    // reset
-    setTitle(""); setDescription(""); setLocation(""); setCategory("Furniture"); setImages([]);
+    const postData = {
+      title,
+      description,
+      location,
+      category,
+      images, 
+    };
+    
+    try {
+      const response = await axios.post("http://localhost:4000/api/posts", postData, { withCredentials: true });
+      onAdd(response.data); // Update the UI with the real saved post
+      // Reset form...
+      setTitle(""); setDescription(""); setLocation(""); setCategory("Furniture"); setImages([]);
+      Swal.fire({
+      title: 'Success!',
+      text: 'Your item is now Posted! ✨',
+      icon: 'success',
+      confirmButtonColor: '#ff85a2',
+    });
+  } catch (err: any) {
+    console.error("Upload failed", err);
+   Swal.fire({
+    title: 'Oh no!',
+    text: err.response?.data?.message ||'Something went wrong with the upload.',
+    icon: 'error',
+    confirmButtonColor: '#ff85a2', // Cutesy pink!
+  });
+  }
   };
 
   const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {

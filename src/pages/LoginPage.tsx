@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaGoogle, FaApple } from "react-icons/fa";
 import MainLayout from "../layouts/MainLayout";
+import axios from "axios";
 
 interface LoginForm {
   email: string;
@@ -25,26 +26,30 @@ const LoginPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // Read stored user object
-    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-    if (!storedUser) {
-      showToast("No account found. Please sign up.", "error");
-      return;
-    }
+  try {
+    // 1. Talk to the real backend
+    const response = await axios.post("http://localhost:4000/api/auth/login", form, {
+      withCredentials: true // CRITICAL: This allows cookies to be saved!
+    });
 
-    if (storedUser.email !== form.email) {
-      showToast("Wrong email/Email does not match", "error");
-      return;
-    }
+    // 2. The backend sends a "Logged in" message, but the cookies stay in the browser.
+    // We should fetch the user data using your /me endpoint now.
+    const userRes = await axios.get("http://localhost:4000/api/auth/me", { withCredentials: true });
+    
+    // Save user info (but NOT the password/token) for the UI to use
+    localStorage.setItem("user", JSON.stringify(userRes.data.user));
 
-    // For now, we skip password validation (mock login)
-    // Later, backend validation will go here
+    showToast("Welcome back! ✨", "success");
+    setTimeout(() => navigate("/"), 1500);
 
-    navigate("/");
-  };
+  } catch (err: any) {
+    showToast(err.response?.data?.message || "Login failed!", "error");
+  }
+};
+
 
   return (
     <MainLayout>
