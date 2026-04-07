@@ -31,13 +31,11 @@ const LoginPage = () => {
 
   try {
     // 1. Talk to the real backend
-    const response = await axios.post("http://localhost:4000/api/auth/login", form, {
-      withCredentials: true // CRITICAL: This allows cookies to be saved!
-    });
+    await axios.post(`${import.meta.env.VITE_API_URL}api/auth/login`, form, {withCredentials: true });
 
     // 2. The backend sends a "Logged in" message, but the cookies stay in the browser.
     // We should fetch the user data using your /me endpoint now.
-    const userRes = await axios.get("http://localhost:4000/api/auth/me", { withCredentials: true });
+    const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, { withCredentials: true });
     
     // Save user info (but NOT the password/token) for the UI to use
     localStorage.setItem("user", JSON.stringify(userRes.data.user));
@@ -49,7 +47,6 @@ const LoginPage = () => {
     showToast(err.response?.data?.message || "Login failed!", "error");
   }
 };
-
 
   return (
     <MainLayout>

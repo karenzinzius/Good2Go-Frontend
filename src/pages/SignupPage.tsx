@@ -47,20 +47,20 @@ const SignupPage = () => {
 
   try {
     // 2. Register the user
-    await axios.post("http://localhost:4000/api/auth/register", {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
       username: form.username,
       email: form.email,
       password: form.password
     });
 
     // 3. Login automatically to get the cookies
-    await axios.post("http://localhost:4000/api/auth/login", {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
       email: form.email,
       password: form.password
     }, { withCredentials: true });
 
     // 4. Fetch the full User object (including MongoDB _id)
-    const userRes = await axios.get("http://localhost:4000/api/auth/me", { withCredentials: true });
+    const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, { withCredentials: true });
     
     // 5. Store user info and redirect
     localStorage.setItem("user", JSON.stringify(userRes.data.user));

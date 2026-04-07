@@ -23,7 +23,7 @@ const FavouritesPage = () => {
     const fetchFavs = async () => {
       try {
         // We call /me or a specific /favourites endpoint
-        const res = await axios.get('http://localhost:4000/api/auth/me', { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, { withCredentials: true });
         // Assuming your backend populates the favourites array
         setFavourites(res.data.user.favourites || []);
       } catch (err) {
@@ -37,7 +37,7 @@ const FavouritesPage = () => {
 
   const handleRemoveFav = async (postId: string) => {
     try {
-      await axios.post('http://localhost:4000/api/posts/favourite', 
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/posts/favourite`, 
         { postId }, 
         { withCredentials: true }
       );

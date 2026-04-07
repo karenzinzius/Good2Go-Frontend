@@ -26,7 +26,7 @@ const AddItemForm = ({ onAdd }: AddItemFormProps) => {
     };
     
     try {
-      const response = await axios.post("http://localhost:4000/api/posts", postData, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/posts`, postData, { withCredentials: true });
       onAdd(response.data); // Update the UI with the real saved post
       // Reset form...
       setTitle(""); setDescription(""); setLocation(""); setCategory("Furniture"); setImages([]);
