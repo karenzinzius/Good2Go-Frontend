@@ -51,7 +51,7 @@ const SignupPage = () => {
       username: form.username,
       email: form.email,
       password: form.password
-    });
+    }, { withCredentials: true });
 
     // 3. Login automatically to get the cookies
     await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {

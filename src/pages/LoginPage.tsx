@@ -31,7 +31,7 @@ const LoginPage = () => {
 
   try {
     // 1. Talk to the real backend
-    await axios.post(`${import.meta.env.VITE_API_URL}api/auth/login`, form, {withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, form, {withCredentials: true });
 
     // 2. The backend sends a "Logged in" message, but the cookies stay in the browser.
     // We should fetch the user data using your /me endpoint now.
