@@ -27,27 +27,30 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    // 1. Talk to the real backend
-    await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, form, {withCredentials: true });
+    try {
+      // 1. Login and get response
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`, 
+        form, 
+        { withCredentials: true }
+      );
 
-    // 2. The backend sends a "Logged in" message, but the cookies stay in the browser.
-    // We should fetch the user data using your /me endpoint now.
-    const userRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, { withCredentials: true });
-    
-    // Save user info (but NOT the password/token) for the UI to use
-    localStorage.setItem("user", JSON.stringify(userRes.data.user));
+      // 2. Use the user data directly from the login response
+      const userData = res.data.user;
 
-    showToast("Welcome back! ✨", "success");
-    setTimeout(() => navigate("/"), 1500);
+      if (userData) {
+        localStorage.setItem("user", JSON.stringify(userData));
+        showToast("Welcome back! ✨", "success");
+        setTimeout(() => navigate("/"), 1500);
+      }
 
-  } catch (err: any) {
-    showToast(err.response?.data?.message || "Login failed!", "error");
-  }
-};
-
+    } catch (err: any) {
+      showToast(err.response?.data?.message || "Login failed!", "error");
+    }
+  };
+  
   return (
     <MainLayout>
     <div className="min-h-screen flex items-center justify-center bg-base-100">

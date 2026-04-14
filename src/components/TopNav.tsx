@@ -11,7 +11,7 @@ const TopNav = () => {
   const handleLogout = async () => {
   try {
     // 1. Tell backend to clear cookies
-    await axios.delete("http://localhost:4000/api/auth/logout", { withCredentials: true });
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/auth/logout`, { withCredentials: true });
     // 2. Clear local storage
     localStorage.removeItem("user");
     // 3. Refresh or Redirect
