@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# 🌱 Good2Go
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Good2Go is a full-stack web application that connects people who want to give away usable items with those looking for them nearby. Users can upload items with photos, descriptions, and locations so others can easily discover and pick them up. The goal is to reduce waste by making reuse simple, fast, and community-driven through a location-based platform.
 
-Currently, two official plugins are available:
+---
+### 🌍 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
+---
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 📸 Upload items with images and descriptions  
+- 📍 Location-based item discovery  
+- ❤️ Save favorite items  
+- 💬 Messaging between users  
+- 🔐 Authentication (register/login)  
+- 📦 Item reservation system  
+- 📱 Responsive mobile-friendly design  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Frontend:**
+- React (Vite)
+- TypeScript
+- Tailwind CSS / DaisyUI
+- Axios
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Backend:**
+- Node.js
+- Express
+- MongoDB + Mongoose
+- JWT Authentication
+- REST API
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 📦 Installation
+
+### 1. Clone repo
+```bash
+git clone https://github.com/your-username/good2go.git
+Install dependencies
+Frontend;
+
+cd frontend
+npm install
+npm run dev
+
+Backend
+cd backend
+npm install
+npm run dev
+
+⚙️ Environment Variables
+Frontend (.env)
+VITE_API_URL=https://your-backend-url.onrender.com
+
+Backend (.env)
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_secret
+CLIENT_URL=https://your-vercel-app.vercel.app
+
+
 ```
+### 📌 Purpose
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This project was built as a learning full-stack application focused on sustainability, community sharing, and real-world CRUD + authentication systems.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 👨‍💻 Author
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Built by Karen M. Zinzius
