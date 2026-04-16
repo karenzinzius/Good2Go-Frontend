@@ -1,17 +1,27 @@
 const root = document.documentElement;
+const btn = document.getElementById("theme-toggle");
+const icon = document.getElementById("theme-icon");
 
-// Apply saved theme first
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme) {
-  root.setAttribute('data-theme', savedTheme);
-} else {
-  // Otherwise, use system preference
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-}
+// load theme
+const savedTheme = localStorage.getItem("theme");
+let currentTheme =
+  savedTheme ||
+  (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 
-// DaisyUI toggle listener
-const toggle = document.querySelector<HTMLInputElement>('input[data-toggle-theme]');
-toggle?.addEventListener('change', () => {
-  localStorage.setItem('theme', root.getAttribute('data-theme')!);
+root.setAttribute("data-theme", currentTheme);
+icon!.textContent = currentTheme === "dark" ? "☾" : "☀︎";
+
+btn?.addEventListener("click", () => {
+  currentTheme = currentTheme === "dark" ? "light" : "dark";
+
+  root.setAttribute("data-theme", currentTheme);
+  localStorage.setItem("theme", currentTheme);
+
+  // smooth icon swap
+  icon!.classList.add("scale-0", "rotate-90");
+
+  setTimeout(() => {
+    icon!.textContent = currentTheme === "dark" ? "☾" : "☀︎";
+    icon!.classList.remove("scale-0", "rotate-90");
+  }, 150);
 });

@@ -12,11 +12,16 @@
     <title>good2go</title>
   </head>
   <body>
-    <!-- Theme toggle wth daisy ui -->
-    <label class="swap swap-rotate">
-      <input type="checkbox" data-toggle-theme="dark,light" />
-      🌞 🌙
-    </label>
+  <div class="absolute top-3 left-35 z-10">
+  <button
+    id="theme-toggle"
+    class="w-10 h-10 flex items-center justify-center  transition-all duration-300 hover:bg-base-300"
+  >
+    <span id="theme-icon" class="transition-all duration-300 text-lg">
+      ☀︎
+    </span>
+  </button>
+</div>
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
